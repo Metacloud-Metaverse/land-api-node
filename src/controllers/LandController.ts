@@ -10,10 +10,8 @@ class LandController {
             apiResponseHandler.send(req, res, "data", data, "Landt saved successfully")
         }
         catch (error) {
-            next(error);
-            const err = "Error"
             const message = "error saving an land";
-            apiResponseHandler.sendError(req, res, "data", err, message)
+            apiResponseHandler.sendError(req, res, "data", null, message)
         }
     }
     static async fetchLandByCoords(req, res, next) {
@@ -23,18 +21,15 @@ class LandController {
             console.log(coord_x, coord_y)
             let isLandExist = await LandController.landExistByCoords(coord_x, coord_y)
             if (!isLandExist) {
-                const err = "Error"
                 const message = "Land not available with given coords";
-                apiResponseHandler.sendError(req, res, "data", err, message)
+                apiResponseHandler.sendError(req, res, "data", null, message)
             } else {
                 const data = isLandExist
                 apiResponseHandler.send(req, res, "data", data, "Land fetched successfully")
             }
         } catch (error) {
-            next(error);
-            const err = "error"
             const message = "error fetching land";
-            apiResponseHandler.sendError(req, res, "data", err, message)
+            apiResponseHandler.sendError(req, res, "data", null, message)
         }
     }
     static async fetchLandById(req, res, next) {
@@ -42,18 +37,15 @@ class LandController {
             const land_id = req.params.land_id
             let isLandExist = await LandController.landExist(land_id)
             if (!isLandExist) {
-                const err = "Error"
                 const message = "Land not available with given id";
-                apiResponseHandler.sendError(req, res, "data", err, message)
+                apiResponseHandler.sendError(req, res, "data", null, message)
             } else {
                 const data = isLandExist
                 apiResponseHandler.send(req, res, "data", data, "Land fetched successfully")
             }
         } catch (error) {
-            next(error);
-            const err = "error"
             const message = "error fetching land";
-            apiResponseHandler.sendError(req, res, "data", err, message)
+            apiResponseHandler.sendError(req, res, "data", null, message)
         }
     }
     static async fetchLandListByCoords(req, res, next) {
@@ -82,10 +74,8 @@ class LandController {
             }
             apiResponseHandler.send(req, res, "data", result, "Land fetched successfully")
         } catch (error) {
-            next(error);
-            const err = "error"
             const message = "error fetching land";
-            apiResponseHandler.sendError(req, res, "data", err, message)
+            apiResponseHandler.sendError(req, res, "data", null, message)
         }
     }
     static async landExist(id) {
