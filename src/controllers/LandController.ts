@@ -8,8 +8,7 @@ class LandController {
             const data = req.body;
             await landModel.create(data);
             apiResponseHandler.send(req, res, "data", data, "Landt saved successfully")
-        }
-        catch (error) {
+        } catch (error) {
             const message = "error saving an land";
             apiResponseHandler.sendError(req, res, "data", null, message)
         }
@@ -66,7 +65,7 @@ class LandController {
                         "message": "Land not available with given cords" + coord_x + "," + coord_y+""
                     }
                     result.push(noValue);
-                }else{
+                } else {
                     const data = isLandExist.dataValues
                     result.push(data);
                 }
