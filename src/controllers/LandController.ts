@@ -3,7 +3,7 @@ const landModel = db.Land;
 const apiResponseHandler = require('../helper/ApiResponse.ts')
 
 class LandController {
-    static async saveLand(req, res, next) {
+    static async saveLand(req: any, res: any, next: any) {
         try {
             const data = req.body;
             await landModel.create(data);
@@ -13,7 +13,7 @@ class LandController {
             apiResponseHandler.sendError(req, res, "data", null, message)
         }
     }
-    static async fetchLandByCoords(req, res, next) {
+    static async fetchLandByCoords(req: any, res: any, next: any) {
         try {
             const coord_x = req.params.x
             const coord_y = req.params.y
@@ -31,7 +31,7 @@ class LandController {
             apiResponseHandler.sendError(req, res, "data", null, message)
         }
     }
-    static async fetchLandById(req, res, next) {
+    static async fetchLandById(req: any, res: any, next: any) {
         try {
             const land_id = req.params.land_id
             let isLandExist = await LandController.landExist(land_id)
@@ -47,7 +47,7 @@ class LandController {
             apiResponseHandler.sendError(req, res, "data", null, message)
         }
     }
-    static async fetchLandListByCoords(req, res, next) {
+    static async fetchLandListByCoords(req: any, res: any, next: any) {
         try {
             const coords = req.query.c
             let coordArray = coords.split(';');
@@ -77,10 +77,10 @@ class LandController {
             apiResponseHandler.sendError(req, res, "data", null, message)
         }
     }
-    static async landExist(id) {
+    static async landExist(id: number) {
         return landModel.findOne({ where: { id: id } })
     }
-    static async landExistByCoords(x, y) {
+    static async landExistByCoords(x: number, y: number) {
         return landModel.findOne({ where: { coord_x: x , coord_y: y} })
     }
 }
