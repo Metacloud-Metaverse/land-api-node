@@ -7,9 +7,9 @@ class LandController {
         try {
             const data = req.body;
             await landModel.create(data);
-            apiResponseHandler.send(req, res, "data", data, "Landt saved successfully")
+            apiResponseHandler.send(req, res, "data", data, "Land saved successfully")
         } catch (error) {
-            const message = "error saving an land";
+            const message = "error saving a land";
             apiResponseHandler.sendError(req, res, "data", null, message)
         }
     }
