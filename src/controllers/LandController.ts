@@ -62,14 +62,14 @@ class LandController {
                     const err = "Error"
                     let noValue = {
                         "id": 0,
-                        "message": "Land not available with given cords" + coord_x + "," + coord_y+""
+                        "message": "Land not available with given cords" + coord_x + "," + coord_y + ""
                     }
                     result.push(noValue);
                 } else {
                     const data = isLandExist.dataValues
                     result.push(data);
                 }
-                
+
             }
             apiResponseHandler.send(req, res, "data", result, "Land fetched successfully")
         } catch (error) {
@@ -81,7 +81,7 @@ class LandController {
         return landModel.findOne({ where: { id: id } })
     }
     static async landExistByCoords(x, y) {
-        return landModel.findOne({ where: { coord_x: x , coord_y: y} })
+        return landModel.findOne({ where: { coord_x: x, coord_y: y } })
     }
 }
 
