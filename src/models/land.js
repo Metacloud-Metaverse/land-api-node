@@ -29,6 +29,10 @@ module.exports = (sequelize, DataTypes) => {
             allowNull: false,
             notEmpty: true,
         },
+        title: {
+            type: DataTypes.STRING,
+            allowNull: true,
+        },
         is_state_use: {
             type: DataTypes.BOOLEAN,
             allowNull: false,
@@ -39,6 +43,10 @@ module.exports = (sequelize, DataTypes) => {
         },
         is_empty: {
             type: DataTypes.BOOLEAN,
+            allowNull: false,
+        },
+        size_type: {
+            type: DataTypes.INTEGER,
             allowNull: false,
         },
         price: {

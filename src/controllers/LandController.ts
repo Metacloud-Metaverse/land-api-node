@@ -1,5 +1,7 @@
 const db = require('../models/index.js');
 const landModel = db.Land;
+const Sequelize = require('sequelize')
+const Op = Sequelize.Op
 const apiResponseHandler = require('../helper/ApiResponse.ts')
 
 class LandController {
@@ -77,11 +79,62 @@ class LandController {
             apiResponseHandler.sendError(req, res, "data", null, message)
         }
     }
+    static async searchLand(req, res, next) {
+        try {
+            const data = req.query
+            const whereCondition = {}
+            let sortByCondition = ["id"]
+            if (data.title) {
+                if (isNaN(data.title)) {
+                    whereCondition['title'] = { [Op.like]: '%' + data.title + '%' }
+                }
+            }
+            if (data.onlyOnSale) {
+                if (!isNaN(data.onlyOnSale) && (data.onlyOnSale < 2)) {
+                    whereCondition['is_on_sale'] = data.onlyOnSale
+                } else {
+                    const para = 'onlyOnSale'
+                    LandController.validateError(req, res, para)
+                    return
+                }
+            }
+            if (data.sortBy) {
+                if (!isNaN(data.sortBy) && (data.sortBy < 3)) {
+                    if (data.sortBy == 0) { sortByCondition = ["title"] }
+                    if (data.sortBy == 1) { sortByCondition = ["created_at", "DESC"] }
+                    if (data.sortBy == 2) { sortByCondition = ["price", "ASC"] }
+                } else {
+                    const para = 'sortBy'
+                    LandController.validateError(req, res, para)
+                    return
+                }
+            }
+            const result = await landModel.findAll({
+                where: whereCondition,
+                order: [[sortByCondition]]
+            },
+            )
+            if (!result || result.length == 0) {
+                const message = "No Land matches with given data"
+                apiResponseHandler.sendError(req, res, "data", null, message)
+            } else {
+                apiResponseHandler.send(req, res, "data", result, "Land fetched successfully")
+            }
+        } catch (error) {
+            const message = "Error fetching lands, Please try again with correct data"
+            apiResponseHandler.sendError(req, res, "data", null, message)
+        }
+    }
     static async landExist(id) {
         return landModel.findOne({ where: { id: id } })
     }
     static async landExistByCoords(x, y) {
         return landModel.findOne({ where: { coord_x: x, coord_y: y } })
+    }
+    static async validateError(req, res, para) {
+        const message = `Data of ${para} is not valid, please use valid data`
+        apiResponseHandler.sendError(req, res, "data", null, message)
+        return
     }
 }
 
