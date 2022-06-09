@@ -109,9 +109,25 @@ class LandController {
                     return
                 }
             }
+            let offset = null
+            if (!data.page) {
+                data.page = null
+            } else if (data.page < 1) {
+                data.page = 1
+            }
+            if (!data.page && !data.limit) {
+                data.limit = null
+            } else if ((data.page && !data.limit) || (data.limit && (data.limit < 1))) {
+                data.limit = process.env.LIMIT
+            }
+            if (data.limit && data.page) {
+                offset = data.limit * (data.page - 1)
+            }
             const result = await landModel.findAll({
                 where: whereCondition,
-                order: [[sortByCondition]]
+                order: [[sortByCondition]],
+                limit: data.limit,
+                offset: offset
             },
             )
             if (!result || result.length == 0) {
