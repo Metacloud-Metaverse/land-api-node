@@ -11,6 +11,7 @@ class LandController {
             await landModel.create(data);
             apiResponseHandler.send(req, res, "data", data, "Land saved successfully")
         } catch (error) {
+            console.error("EL ERROR ESTA ACA ========", error);
             const message = "error saving a land";
             apiResponseHandler.sendError(req, res, "data", null, message)
         }
