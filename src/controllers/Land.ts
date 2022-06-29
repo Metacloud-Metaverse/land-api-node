@@ -7,9 +7,9 @@ const titleDescending = require('../helper/titleDesc.ts');
 const dateAscending = require('../helper/dateAsc.ts');
 const dateDescending = require('../helper/dateDesc.ts');
 const byTwoPoints = require('../helper/twoPoints.ts');
+const listWithCoords = require('../helper/listCoords.ts');
 
 class Land {
-
   static async createLand(req, res) {
     try {
       const landCreated = await landsRespository.createLand(req.body);
@@ -107,30 +107,55 @@ class Land {
       }
 
       return res.status(200).json(lands)
-    } catch (error) {
-      return res.status(500).json({ error })
+    } catch (e) {
+      return res.status(e.code).json({
+        status: 'FAILED',
+        message: e.message
+       })
     }
   }
 
   static async searchLandByCoords(req, res) {
     try {
       const { coord_x, coord_y } = req.params;
+
+      if (!coord_x || !coord_y) {
+        return res.status(403).json({
+          status: 'FAILED',
+          message: 'The corresponding params were not sent'
+        })
+      }
+
       const landWithCoords = await landsRespository.getLandByCoords(coord_x, coord_y);
 
       return res.status(200).json(landWithCoords);
-    } catch (error) {
-      return res.status(500).json(error);
+    } catch (e) {
+      return res.status(e.code).json({
+        status: 'FAILED',
+        message: e.message
+      });
     }
   }
 
   static async searchLandById(req, res) {
     try {
       const { id } = req.params;
+
+      if (!id) {
+        return res.status(403).json({
+          status: 'FAILED',
+          message: 'The id is missing on req.params'
+        })
+      }
+
       const landWithId = await landsRespository.getLandById(id);
 
       return res.status(200).json(landWithId);
-    } catch (error) {
-      return res.status(500).json(error);
+    } catch (e) {
+      return res.status(e.code).json({
+        status: 'FAILED',
+        message: e.message
+      });
     }
   }
 
@@ -138,27 +163,58 @@ class Land {
     try {
       const { p1, p2 } = req.query;
 
+      if (!p1 || !p2) {
+        return res.status(403).json({
+          status: 'FAILED',
+          message: 'The corresponding queries were not sent'
+        })
+      }
+
       const lands = await landsRespository.getLands();
 
       const landsByTwoPoints = await byTwoPoints.filterWithTwoPoints(lands, p1, p2);
 
       return res.status(200).json(landsByTwoPoints);
-    } catch (error) {
-      return res.status(500).json(error);
+    } catch (e) {
+      return res.status(e.code).json({
+        status: 'FAILED',
+        message: e.message
+      });
     }
   }
 
-  static async getLandsByUserId(req, res) {
+  static async listLandWhitCoords(req, res) {
+    try {
+      const { c } = req.query;
 
+      if (!c) {
+        return res.status(403).json({
+          status: 'FAILED',
+          message: 'You need to pass the array of coords'
+        });
+      }
+
+      const lands = await landsRespository.getLands();
+
+      const listedWhitCoords = await listWithCoords.getWithArrayCoords(c, lands);
+
+      return res.status(200).json(listedWhitCoords);
+    } catch (e) {
+      return res.status(e.code).json({
+        status: 'FAILED',
+        message: e.message
+      });
+    }
   }
 }
 
 module.exports = Land;
 
 /*
-- API - Search lands
-- API - Fetch Lands with Two Points
-- API - Fetch Land with coordinates
-- API - Get by ID
-- API - Get By Me
+- API - Search lands 🧪
+- API - Fetch Lands with Two Points ✅
+- API - Fetch Land with coordinates ✅
+- API - Get by ID ✅
+- API - List Lands with array of coordinates ✅
+- API - Get By Me 👷🏻‍♂️
 */
