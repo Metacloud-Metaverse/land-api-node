@@ -30,7 +30,7 @@ class Land {
   }
 
   static async searchLand(req, res) {
-    let { onSale, sortBy, typeOrder } = req.query;
+    let { onSale, sortBy, typeOrder, page, size } = req.query;
 
     const ASCENDING_ORDER = 'asc';
     const DESCENDING_ORDER = 'desc';
@@ -39,7 +39,7 @@ class Land {
     const PRICE = 2;
 
     try {
-      const lands = await landsRespository.getLands()
+      const lands = await landsRespository.getLands(page, size);
       const landsOnSaleFiltered = await onSaleFilter.isOnSale(lands, onSale);
 
       if (onSale && sortBy == TITLE && typeOrder == ASCENDING_ORDER) {

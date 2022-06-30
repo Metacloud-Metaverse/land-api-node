@@ -7,8 +7,19 @@ class LandsDBRepository {
     return landCreated;
   }
 
-  static async getLands() {
-    const lands = await Lands.findAll();
+  static async getLands(page, size) {
+    let lands;
+    const offset = +page * +size;
+    const limit = +size;
+
+    if (page && size) {
+      lands = await Lands.findAll({
+        offset,
+        limit
+      });
+    } else {
+      lands = await Lands.findAll();
+    }
 
     if (!lands) {
       throw ({ code: 404, message: "The collection of lands is empty" });
@@ -20,7 +31,7 @@ class LandsDBRepository {
   static async getLandByCoords(coord_x, coord_y) {
     const land = await Lands.findOne({ where: { coord_x, coord_y } })
 
-    if(!land){
+    if (!land) {
       throw ({ code: 404, message: "Land by coords not found" });
     }
 
@@ -30,7 +41,7 @@ class LandsDBRepository {
   static async getLandById(id) {
     const land = await Lands.findOne({ where: { id } })
 
-    if(!land){
+    if (!land) {
       throw ({ code: 404, message: "Land by id not found" });
     }
 
