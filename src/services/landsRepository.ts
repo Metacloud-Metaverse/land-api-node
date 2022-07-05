@@ -47,6 +47,20 @@ class LandsDBRepository {
 
     return land;
   }
+
+  static async getLandsByUserId(user_id) {
+    const lands = await Lands.findAll({ where: { user_id } });
+
+    if (!lands) {
+      throw ({ code: 404, message: "The lands of user_id not exist" });
+    }
+
+    if (lands.length == 0) {
+      throw ({ code: 200, message: "This user has not lands", status: 'SUCCESS' });
+    }
+
+    return lands;
+  }
 }
 
 module.exports = LandsDBRepository;

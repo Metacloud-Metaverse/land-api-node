@@ -10,12 +10,13 @@ router.get('/land/search-by-coords/:coord_x?/:coord_y?', landController.searchLa
 router.get('/land/search-by-id/:id?', landController.searchLandById);
 router.get('/land/list-with-two-points', landController.listLandByTwoPoints);
 router.get('/land/list-with-coordinates', landController.listLandWhitCoords);
+router.get('/land/get-lands-by-user-id/:user_id?', landController.getLandsByUserId);
 
 router.post('/config/:id?', configTestController.createOrUpdateConfig);
 router.get('/config/:id', configTestController.getConfigById);
 
 router.get('/land/LANDS', landController.getLands);
-router.post('/land/create', landController.createLand);
+router.post('/land/create', auth ,landController.createLand);
 
 module.exports = router;
     

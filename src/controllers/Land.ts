@@ -12,6 +12,8 @@ const listWithCoords = require('../helper/listCoords.ts');
 class Land {
   static async createLand(req, res) {
     try {
+      const { user_id } = req.user;
+      req.body.user_id = user_id;
       const landCreated = await landsRespository.createLand(req.body);
       return res.status(200).json(landCreated);
     } catch (error) {
@@ -108,8 +110,9 @@ class Land {
 
       return res.status(200).json(lands)
     } catch (e) {
-      return res.status(e.code).json({
-        status: 'FAILED',
+      console.error(e);
+      return res.status(e.code || 500).json({
+        status: e.status ? e.status : 'FAILED',
         message: e.message
        })
     }
@@ -130,7 +133,7 @@ class Land {
 
       return res.status(200).json(landWithCoords);
     } catch (e) {
-      return res.status(e.code).json({
+      return res.status(e.code || 500).json({
         status: 'FAILED',
         message: e.message
       });
@@ -152,7 +155,7 @@ class Land {
 
       return res.status(200).json(landWithId);
     } catch (e) {
-      return res.status(e.code).json({
+      return res.status(e.code || 500).json({
         status: 'FAILED',
         message: e.message
       });
@@ -176,7 +179,7 @@ class Land {
 
       return res.status(200).json(landsByTwoPoints);
     } catch (e) {
-      return res.status(e.code).json({
+      return res.status(e.code || 500).json({
         status: 'FAILED',
         message: e.message
       });
@@ -200,8 +203,23 @@ class Land {
 
       return res.status(200).json(listedWhitCoords);
     } catch (e) {
-      return res.status(e.code).json({
+      return res.status(e.code || 500).json({
         status: 'FAILED',
+        message: e.message
+      });
+    }
+  }
+
+  static async getLandsByUserId(req, res) {
+    try {
+      const { user_id } = req.params;
+
+      const landsByUserId = await landsRespository.getLandsByUserId(user_id);
+
+      return res.status(200).json(landsByUserId);
+    } catch (e) {
+      return res.status(e.code || 500).json({
+        status: e.status ? e.status : 'FAILED',
         message: e.message
       });
     }
